@@ -23,17 +23,17 @@ function translate_story(nav) {
   sections = json[n].s;
   img_index = 0 + sections.length + 6;
 
-  first_img = '<a href="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/medium/' + idx + '/01.jpg" data-caption="' + title + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/01.jpg" alt="image 01"></a>'
+  first_img = '<a href="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/01.jpg" data-caption="' + title + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/01.jpg" alt="image 01"></a>'
   content_div = "      <div class=\"gallery\"><table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td>" + first_img + "</td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" tabindex=\"3\" /></td></tr><tr>\n";
 
-  messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <span class=\"editable\" contenteditable=\"true\" id=\"language\" placeholder=\"Target language\" tabindex=\"1\"></span>";
+  messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <input type=\"text\" class=\"editable\" id=\"language\" placeholder=\"Target language\" tabindex=\"1\"></input>";
   var language = document.getElementById("language");
-  language.setAttribute("oninput", "localStorage['gtr_l']=this.innerHTML; check_lang();");
+  language.setAttribute("oninput", "localStorage['gtr_l']=this.value; check_lang();");
   if (localStorage["gtr_l"]) {
-    language.innerHTML = localStorage["gtr_l"];
+    language.value = localStorage["gtr_l"];
   }
   if (localStorage["gtr_a"]) {
-    translator.innerHTML = localStorage["gtr_a"];
+    translator.value = localStorage["gtr_a"];
   }
   translator_div.style.display = '';
   translate_button.style.display = 'none';
@@ -53,11 +53,11 @@ function translate_story(nav) {
     if (page_number < 10) {
       page_number = "0" + page_number;
     }
-    lightbox_img = '<a href="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/' + page_number + '.jpg" data-caption="' + json[n].s[i][page_number] + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/' + page_number + '.jpg" alt="image ' + page_number + '"></a>'
-    content_div = content_div + "          <td>" + lightbox_img + "</td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\" tabindex=\"" + tab_index + "\"></textarea></td>        </tr>"
+    lightbox_img = '<a href="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/' + page_number + '.jpg" data-caption="' + json[n].s[i][page_number] + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/' + page_number + '.jpg" alt="image ' + page_number + '"></a>';
+    content_div = content_div + "          <td>" + lightbox_img + "</td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\" tabindex=\"" + tab_index + "\"></textarea></td>        </tr>";
   }
 
-  translang = "Translation: " + translator.innerHTML + "<br>* Language: " + language.innerHTML;
+  translang = "Translation: " + translator.value + "<br>* Language: " + language.value;
 
   story_table = document.getElementById("story_table");
   attribution_row = "          <td></td>\n          <td id=\"attribution\">" + attribution.replace(/\n/g, "<br>") + "</td>\n          <td>" + attribution.replace(/\n/g, "<br>").replace(/Language: .*/, translang) + "</td>        </tr>";
@@ -107,10 +107,10 @@ function review_translation() {
   translation_output = document.getElementById("translation_output");
   var container = document.getElementById("container");
 
-  if (translator.innerHTML == "") {
+  if (translator.value == "") {
     alert("Please fill in the name of the translator. Your translation cannot be submitted without attribution.");
     close_modal();
-  } else if (language.innerHTML == "") {
+  } else if (language.value == "") {
     alert("Please fill in the language name. You will not be able to submit your translation without providing the name of the language.")
     close_modal();
   } else {
@@ -130,7 +130,7 @@ function review_translation() {
       }
 
     }
-    translang = "Translation: " + translator.innerHTML + "\n* Language: " + language.innerHTML;
+    translang = "Translation: " + translator.value + "\n* Language: " + language.value;
 
     translation_output.value = format_content + attribution.replace(/<br>/g, "\n").replace(/Language: .*/, translang);
 
@@ -156,7 +156,7 @@ function story_api() {
     for (var n = 0; n < json.length; n++) {
       if (json[n].i == args) {
         serial = n;
-        break
+        break;
       }
     }
     translate_story(serial);
@@ -172,11 +172,11 @@ function random_story() {
 function prepare_submission() {
   var sub = document.getElementById("subject_line");
   var rev = document.getElementById("review_sub");
-  sub.value = 'New translation: #' + window.idx + ', "' + window.title + '" into ' + window.language.innerHTML + " by " + window.translator.innerHTML + " (GSN Translator)";
-  window.name_line.value = window.translator.innerHTML;
+  sub.value = 'New translation: #' + window.idx + ', "' + window.title + '" into ' + window.language.value + " by " + window.translator.value + " (GSN Translator)";
+  window.name_line.value = window.translator.value;
   window.story_number.value = window.idx;
-  window.story_language.value = window.language.innerHTML;
-  window.md_title.value = window.idx + "_" + window.title_text.value.toLowerCase().replace(/ /g, "-").replace(/[\!\?,\.:'¿¡`]/g, "") + ".md";
+  window.story_language.value = window.language.value;
+  window.md_title.value = window.idx + "_" + window.title_text.value.toLowerCase().replace(/ /g, "-").replace(/[\!\?,\.:;'¿¡`]/g, "") + ".md";
   window.story_translation.value = window.translation_output.value;
   rev.style.width = "80%";
   rev.classList.remove("tooltip");
@@ -187,7 +187,7 @@ function prepare_submission() {
 
 function check_lang() {
   var language = document.getElementById("language");
-  localStorage["gtr_l"]=language.innerHTML.replace(/\n|<br>/g, "");
+  localStorage["gtr_l"]=language.value.replace(/\n|<br>/g, "");
   language.style["background-color"] = "#fff";
   var iso = "";
   var full_name = "";
@@ -195,7 +195,7 @@ function check_lang() {
   msg_bar.style.display = 'none';
   for (var i = 0; i < names.length; i++) {
     for (var n = 0; n < names[i].l.length; n++) {
-      if (language.innerHTML.toLowerCase() == names[i].l[n].toLowerCase()) {
+      if (language.value.toLowerCase() == names[i].l[n].toLowerCase()) {
         iso = names[i].l[0];
         full_name = names[i].l[1];
         break;
