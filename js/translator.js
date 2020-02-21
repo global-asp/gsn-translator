@@ -24,7 +24,7 @@ function translate_story(nav) {
   img_index = 0 + sections.length + 6;
 
   first_img = '<a href="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/01.jpg" data-caption="' + title + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/01.jpg" alt="image 01"></a>'
-  content_div = "      <div class=\"gallery\"><table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td>" + first_img + "</td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" tabindex=\"3\" /></td></tr><tr>\n";
+  content_div = "      <div class=\"gallery\"><table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td>" + first_img + "</td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" class=\"target-input\" tabindex=\"3\" /></td></tr><tr>\n";
 
   messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <input type=\"text\" class=\"editable\" id=\"language\" placeholder=\"Target language\" tabindex=\"1\"></input>";
   var language = document.getElementById("language");
@@ -54,7 +54,7 @@ function translate_story(nav) {
       page_number = "0" + page_number;
     }
     lightbox_img = '<a href="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/' + page_number + '.jpg" data-caption="' + json[n].s[i][page_number] + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/' + page_number + '.jpg" alt="image ' + page_number + '"></a>';
-    content_div = content_div + "          <td>" + lightbox_img + "</td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\" tabindex=\"" + tab_index + "\"></textarea></td>        </tr>";
+    content_div = content_div + "          <td>" + lightbox_img + "</td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\" class=\"target-input\" tabindex=\"" + tab_index + "\"></textarea></td>        </tr>";
   }
 
   translang = "Translation: " + translator.value + "<br>* Language: " + language.value;
@@ -201,29 +201,30 @@ function check_lang() {
         break;
       }
     }
-    if (iso != "") {
-      for (var i = 0; i < gasp.length; i++) {
-        if (gasp[i][iso]) {
-          idx_array = gasp[i][iso].split(",");
-          var foundTranslation = false;
-          for (var n = 0; n < idx_array.length; n++) {
-            if (idx_array[n] == idx) {
-              language.style["background-color"] = "#FF8C8E";
-              tr_msg = "This story (#" + idx + ") has already been translated into " + full_name;
-              msg_format = "<span style=\"background-color:#FFFFC2;margin-right:12px;\">" + tr_msg + "</span>";
-              nx_msg = "Skip translated stories";
-              msg_format += "<a href='#' onclick='toggle_hide_translated(1)'>" + nx_msg + "</a>";
-              msg_bar.innerHTML = msg_format;
-              msg_bar.style.display = '';
-              // translation already completed on this book
-              if (localStorage["hide_translated"] == 1) {
-                (document.getElementById('next').onclick)();
-              }
-              return;
+  }
+  check_dir(iso);
+  if (iso != "") {
+    for (var i = 0; i < gasp.length; i++) {
+      if (gasp[i][iso]) {
+        idx_array = gasp[i][iso].split(",");
+        var foundTranslation = false;
+        for (var n = 0; n < idx_array.length; n++) {
+          if (idx_array[n] == idx) {
+            language.style["background-color"] = "#FF8C8E";
+            tr_msg = "This story (#" + idx + ") has already been translated into " + full_name;
+            msg_format = "<span style=\"background-color:#FFFFC2;margin-right:12px;\">" + tr_msg + "</span>";
+            nx_msg = "Skip translated stories";
+            msg_format += "<a href='#' onclick='toggle_hide_translated(1)'>" + nx_msg + "</a>";
+            msg_bar.innerHTML = msg_format;
+            msg_bar.style.display = '';
+            // translation already completed on this book
+            if (localStorage["hide_translated"] == 1) {
+              (document.getElementById('next').onclick)();
             }
+            return;
           }
-          return;
         }
+        return;
       }
     }
   }
@@ -260,5 +261,22 @@ function close_modal() {
   close_button = document.getElementsByClassName("modal-close");
   for (i = 0; i < close_button.length; i++) {
     close_button[i].click();
+  }
+}
+
+function check_dir(iso) {
+  var dir = "ltr";
+  for (var i = 0; i < rtl.length; i++) {
+    if (rtl[i] == iso) {
+      dir = "rtl";
+    }
+  }
+  text_direction(dir);
+}
+
+function text_direction(dir) {
+  target = document.getElementsByClassName("target-input");
+  for (var i = 0; i < target.length; i++) {
+    target[i].setAttribute("dir", dir);
   }
 }
