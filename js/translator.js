@@ -114,7 +114,7 @@ function review_translation() {
     alert("Please fill in the language name. You will not be able to submit your translation without providing the name of the language.")
     close_modal();
   } else {
-    content_div = "      <table id=\"content_table\">\n        <tr><th style='width:25%'></th><th style='width:65%'>your translation</th></tr><tr>\n          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/" + idx + "/01.jpg\"></td>\n          <td><h3>" + tr_title + "</h3></td></tr><tr>\n";
+    content_div = "      <table id=\"content_table\">\n        <tr><th style='width:25%'></th><th style='width:65%'>your translation</th></tr><tr>\n          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/" + idx + "/01.jpg\"></td>\n          <td><h3 class=\"target-review\">" + tr_title + "</h3></td></tr><tr>\n";
 
     format_content = "# " + tr_title + "\n\n##\n";
     for (var i = 0; i < number_of_sections; i++) {
@@ -126,7 +126,7 @@ function review_translation() {
 	page_number = "0" + page_number;
       }
       if (page_number != 0 || page_number != page_number.length) {
-	content_div = content_div + "          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/" + idx + "/" + page_number + ".jpg\"></td>\n          <td>" + window["story_tgt_" + i].value + "</td>        </tr>"
+	content_div = content_div + "          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/" + idx + "/" + page_number + ".jpg\"></td>\n          <td class=\"target-review\">" + window["story_tgt_" + i].value + "</td>        </tr>"
       }
 
     }
@@ -141,6 +141,7 @@ function review_translation() {
 
     var review_table = document.getElementById("review_table");
     review_table.innerHTML = content_div + "<tr><td></td><td>" + format_attribution + "</td></tr></table>";
+    check_lang();
 
     document.getElementById("thanks").value = "/translator/thanks.html?" + idx;
 
@@ -278,5 +279,14 @@ function text_direction(dir) {
   target = document.getElementsByClassName("target-input");
   for (var i = 0; i < target.length; i++) {
     target[i].setAttribute("dir", dir);
+  }
+  review = document.getElementsByClassName("target-review");
+  for (var i = 0; i < review.length; i++) {
+    var align = "left";
+    if (dir == "rtl") {
+      align = "right";
+    }
+    review[i].setAttribute("dir", dir);
+    review[i].setAttribute("style", "text-align:" + align);
   }
 }
