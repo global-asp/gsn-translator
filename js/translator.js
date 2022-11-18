@@ -10,7 +10,7 @@ function translate_story(nav) {
   var previous = document.getElementById("prev");
   var translate_button = document.getElementById("translate_button");
 
-  n = parseInt(serial_store.innerHTML);
+  var n = parseInt(serial_store.innerHTML);
   if (nav == "prev") {
     n = n-1;
   } else if (typeof nav == "number") {
@@ -24,7 +24,7 @@ function translate_story(nav) {
   img_index = 0 + sections.length + 6;
 
   first_img = '<a href="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/01.jpg" data-caption="' + title + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/gsn-imagebank/master/' + idx + '/01.jpg" alt="image 01"></a>'
-  content_div = "      <div class=\"gallery\"><table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td>" + first_img + "</td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" class=\"target-input\" tabindex=\"3\" /></td></tr><tr>\n";
+  content_div = "      <div class=\"gallery\"><table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td>" + first_img + "</td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" class=\"target-input\" tabindex=\"3\" /></td></tr><tr>\n";
 
   messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <input type=\"text\" class=\"editable\" id=\"language\" placeholder=\"Target language\" tabindex=\"1\"></input>";
   var language = document.getElementById("language");
